@@ -24,13 +24,27 @@ function App() {
     handleCloseModal();
   };
 
-  const handleEditCard = (card) => {
-    // Logic to replace the card in its column
-    const newColumn = columns[card.status].map(c => c.id === card.id ? card : c);
-    const newColumns = { ...columns, [card.status]: newColumn };
+  const handleEditCard = (updatedCard) => {
+    if (!updatedCard) return;
+
+    // Remove the card from its current column if the status changed
+    const columnCards = columns[updatedCard.status].filter(card => card.id !== updatedCard.id);
+
+    // Add the updated card to its new column
+    const newColumns = {
+        ...columns,
+        [updatedCard.status]: [...columnCards, updatedCard]
+    };
+
+    // If the status changed, we also need to remove the card from the old column
+    if (editableCard && editableCard.status !== updatedCard.status) {
+        newColumns[editableCard.status] = newColumns[editableCard.status].filter(card => card.id !== updatedCard.id);
+    }
+
     setColumns(newColumns);
     handleCloseModal();
-  };
+};
+
 
   const handleDeleteCard = (card) => {
     const newColumn = columns[card.status].filter(c => c.id !== card.id);

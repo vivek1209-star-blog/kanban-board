@@ -19,13 +19,18 @@ const CardModal = ({ show, onHide, onSave, onDelete, card }) => {
   }, [card]);
 
   const handleSubmit = () => {
+    if (!title.trim() || description.length < 25) {
+        alert('Title must not be empty and description must be at least 25 characters long.');
+        return;
+    }
     onSave({
-      id: card ? card.id : Date.now(),
-      title,
-      description,
-      status
+        id: card ? card.id : Date.now(),
+        title,
+        description,
+        status
     });
-  };
+};
+
 
   return (
     <Modal show={show} onHide={onHide}>
