@@ -20,17 +20,16 @@ const CardModal = ({ show, onHide, onSave, onDelete, card }) => {
 
   const handleSubmit = () => {
     if (!title.trim() || description.length < 25) {
-        alert('Title must not be empty and description must be at least 25 characters long.');
-        return;
+      alert('Title must not be empty and description must be at least 25 characters long.');
+      return;
     }
     onSave({
-        id: card ? card.id : Date.now(),
-        title,
-        description,
-        status
+      id: card ? card.id : Date.now(),
+      title,
+      description,
+      status
     });
-};
-
+  };
 
   return (
     <Modal show={show} onHide={onHide}>
@@ -39,17 +38,15 @@ const CardModal = ({ show, onHide, onSave, onDelete, card }) => {
       </Modal.Header>
       <Modal.Body>
         <Form>
-          <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Group className="mb-3">
             <Form.Label>Title</Form.Label>
             <Form.Control type="text" placeholder="Enter title" value={title} onChange={e => setTitle(e.target.value)} />
           </Form.Group>
-
-          <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Group className="mb-3">
             <Form.Label>Description</Form.Label>
-            <Form.Control type="text" placeholder="Description" value={description} onChange={e => setDescription(e.target.value)} />
+            <Form.Control as="textarea" rows={3} placeholder="Description" value={description} onChange={e => setDescription(e.target.value)} />
           </Form.Group>
-
-          <Form.Group className="mb-3" controlId="formBasicCheckbox">
+          <Form.Group className="mb-3">
             <Form.Label>Status</Form.Label>
             <Form.Select value={status} onChange={e => setStatus(e.target.value)}>
               <option value="todo">To Do</option>
@@ -61,14 +58,8 @@ const CardModal = ({ show, onHide, onSave, onDelete, card }) => {
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onHide}>Close</Button>
-        <Button variant="primary" onClick={handleSubmit}>
-          Save Changes
-        </Button>
-        {card && (
-          <Button variant="danger" onClick={() => onDelete(card)}>
-            Delete
-          </Button>
-        )}
+        <Button variant="primary" onClick={handleSubmit}>Save Changes</Button>
+        {card && <Button variant="danger" onClick={() => onDelete(card)}>Delete</Button>}
       </Modal.Footer>
     </Modal>
   );
