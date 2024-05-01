@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 
-const CardModal = ({ show, onHide, onSave, onDelete, card }) => {
+const CardModal = ({ show, onHide, onSave, card }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState('todo');
@@ -19,17 +19,42 @@ const CardModal = ({ show, onHide, onSave, onDelete, card }) => {
   }, [card]);
 
   const handleSubmit = () => {
-    if (!title.trim() || description.length < 25) {
-      alert('Title must not be empty and description must be at least 25 characters long.');
+    // Title validation: should only contain alphabets and spaces
+    if (!/^[A-Za-z\s]+$/.test(title)) {
+      alert('Title must contain only alphabets and spaces.');
       return;
     }
-    onSave({
-      id: card ? card.id : Date.now(),
-      title,
-      description,
-      status
-    });
+
+
+    // Description validation: should be at least 25 characters long
+    if (description.length < 25) {
+      alert('Description must be at least 25 characters long.');
+      return;
+    }
+
+    // If card is being edited
+    if (card) {
+      // If validations pass, proceed to save the edited card
+      onSave({
+        id: card.id,
+        title,
+        description,
+        status
+      });
+    } else {
+      // If card is being added
+      // Proceed to save the new card
+      onSave({
+        id: Date.now(),
+        title,
+        description,
+        status
+      });
+    }
+
+    onHide(); // Close modal after saving
   };
+
 
   return (
     <Modal show={show} onHide={onHide}>
@@ -59,7 +84,6 @@ const CardModal = ({ show, onHide, onSave, onDelete, card }) => {
       <Modal.Footer>
         <Button variant="secondary" onClick={onHide}>Close</Button>
         <Button variant="primary" onClick={handleSubmit}>Save Changes</Button>
-        {card && <Button variant="danger" onClick={() => onDelete(card)}>Delete</Button>}
       </Modal.Footer>
     </Modal>
   );

@@ -60,61 +60,65 @@ function App() {
       [card.status]: columns[card.status].filter((c) => c.id !== card.id),
     };
     setColumns(newColumns);
-    handleCloseModal();
+    
+    // Check if no more cards left in the current column
+    if (newColumns[card.status].length === 0) {
+      setShowModal(false);
+    }
   };
+  
 
   return (
     <div
-      style={{
-        background: "linear-gradient(135deg, #76509B 0%, #C07AB8 100%)",
-        minHeight: "100vh",
-        padding: "20px",
-      }}
-    >
-      <Container fluid>
-        <Row style={{ justifyContent: "center", marginBottom: "1rem" }}>
-          <header
-            style={{
-              display: "flex",
-              justifyContent: "space-between", // Align items horizontally with space between
-              alignItems: "center", // Align items vertically to center
-              backgroundColor: "rgba(0, 0, 0, 0.1)",
-              backdropFilter: "blur(10px)",
-              padding: "10px 20px",
-              borderRadius: "10px",
-              color: "white",
-              fontSize: "1.5rem",
-              marginBottom: "20px",
-            }}
-          >
-            <div>Project Team Spirit</div> {/* Name on the left */}
-            <Button onClick={() => handleShowModal()} variant="light">
-              Add New Card
-            </Button>{" "}
-            {/* Button on the right */}
-          </header>
-        </Row>
-        <Row>
-          {Object.keys(columns).map((columnId) => (
-            <Column
-              key={columnId}
-              title={columnId.replace(/^\w/, (c) => c.toUpperCase())} // Capitalize the first letter
-              cards={columns[columnId]}
-              onCardClick={handleShowModal}
-            />
-          ))}
-        </Row>
-        {showModal && (
-          <CardModal
-            show={showModal}
-            onHide={handleCloseModal}
-            onSave={editableCard ? handleEditCard : handleAddCard}
-            onDelete={editableCard && handleDeleteCard}
-            card={editableCard}
+    style={{
+      background: "linear-gradient(135deg, #76509B 0%, #C07AB8 100%)",
+      minHeight: "100vh",
+      padding: "20px",
+    }}
+  >
+    <Container fluid>
+      <Row style={{ justifyContent: "center", marginBottom: "1rem" }}>
+        <header
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            backgroundColor: "rgba(0, 0, 0, 0.1)",
+            backdropFilter: "blur(10px)",
+            padding: "10px 20px",
+            borderRadius: "10px",
+            color: "white",
+            fontSize: "1.5rem",
+            marginBottom: "20px",
+          }}
+        >
+          <div>Project Team Spirit</div>
+          <Button onClick={() => handleShowModal()} variant="light">
+            Add New Card
+          </Button>
+        </header>
+      </Row>
+      <Row>
+        {Object.keys(columns).map((columnId) => (
+          <Column
+            key={columnId}
+            title={columnId.replace(/^\w/, (c) => c.toUpperCase())}
+            cards={columns[columnId]}
+            onEditClick={handleShowModal}
+            onDeleteClick={handleDeleteCard}
           />
-        )}
-      </Container>
-    </div>
+        ))}
+      </Row>
+      {showModal && (
+        <CardModal
+          show={showModal}
+          onHide={() => setShowModal(false)} // Simplified onHide
+          onSave={editableCard ? handleEditCard : handleAddCard}
+          card={editableCard}
+        />
+      )}
+    </Container>
+  </div>
   );
 }
 

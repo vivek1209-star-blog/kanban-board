@@ -1,8 +1,9 @@
-// Column.js
 import React from 'react';
 import { Card, Col } from 'react-bootstrap';
+import { BsTrash, BsPencil } from 'react-icons/bs';
 
-const Column = ({ title, cards, onCardClick }) => {
+const Column = ({ title, cards, onEditClick, onDeleteClick }) => {
+
   return (
     <Col style={{
       background: '#EBECF0',
@@ -23,11 +24,18 @@ const Column = ({ title, cards, onCardClick }) => {
             cursor: 'pointer',
             boxShadow: '0 1px 0 rgba(9,30,66,.25)'
           }}
-          onClick={() => onCardClick(card)}
         >
           <Card.Body>
             <Card.Title>{card.title}</Card.Title>
             <Card.Text>{card.description}</Card.Text>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div>
+                <BsPencil onClick={() => onEditClick(card)} style={{ cursor: "pointer" }} /> {/* Ensure onEditClick is called */}
+              </div>
+              <div>
+                <BsTrash onClick={(e) => { e.stopPropagation(); onDeleteClick(card); }} style={{ cursor: "pointer" }} />
+              </div>
+            </div>
           </Card.Body>
         </Card>
       ))}
